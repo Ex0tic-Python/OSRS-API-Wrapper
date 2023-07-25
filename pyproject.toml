@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "OSRS-API-Wrapper"
+authors = [
+    {name = "Ex0tic_Python"},
+]
+description = "An API-Wrapper for OldSchool RuneScape's GE and Hiscores API's"
+readme = "README.md"
+requires-python = ">=3.9"
+keywords = ["osrs", "runescape", "wrapper"]
+license = {file = "LICENSE"}
+dependencies = [
+    "requests>=2.31.0"
+]
+
+[project.urls]
+Repository = "https://github.com/Ex0tic-Python/OSRS-API-Wrapper"
+Documentation = "TODO"
