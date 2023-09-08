@@ -17,13 +17,19 @@ def debug_refresh_json_table():
         while i := i + 1: # Infinite auto-incrementing loop
             print(f"Started page iteration loop with increment value \"{i}\" ({round(perf_counter() - start_time, 2)}s)")
             
-            # Get response and verify it's a valid status code
-            itemdb_response = get(f"https://secure.runescape.com/m=itemdb_oldschool/api/catalogue/items.json?category=1&alpha={letter}&page={i}")
-            print(f"Recieved OSRS API Response ({round(perf_counter() - start_time, 2)}s)")
-            if itemdb_response.status_code != 200:  # Response should always be 200 if everything went fine
-                ################################################################################raise UnexpectedStatusCodeRecieved(itemdb_response.status_code, "200")
-                raise f"Status Code \"{itemdb_response.status_code}\" recieved; Expected 200"
-            print(f"Response Status Code recieved was 200 ({round(perf_counter() - start_time, 2)}s)")
+            # Get response and verify it's valid
+            while True:
+                itemdb_response = get(f"https://secure.runescape.com/m=itemdb_oldschool/api/catalogue/items.json?category=1&alpha={letter}&page={i}")
+                print(f"Recieved OSRS API Response ({round(perf_counter() - start_time, 2)}s)")
+                if itemdb_response.status_code != 200:  # Response should always be 200 if everything went fine
+                    ################################################################################raise UnexpectedStatusCodeRecieved(itemdb_response.status_code, "200")
+                    raise f"Status Code \"{itemdb_response.status_code}\" recieved; Expected 200"
+                print(f"Response Status Code recieved was 200 ({round(perf_counter() - start_time, 2)}s)")
+                # For some reason, request occasionally returns an empty byte string. Check for it and remake request
+                if itemdb_response.content == b"":
+                    print(f"Response Content was an empty byte string. Making new API Request ({round(perf_counter() - start_time, 2)}s)")
+                    continue
+                break
             
             # Verify that items list isn't empty
             itemdb_json = itemdb_response.json()
